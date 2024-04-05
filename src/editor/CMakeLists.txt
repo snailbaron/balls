@@ -1,7 +1,7 @@
 add_executable(editor
     main.cpp
 )
-target_link_libraries(editor PRIVATE SDL3::SDL3 sdl-cpp toolkit geometry)
+target_link_libraries(editor PRIVATE sdl-cpp toolkit geometry)
 
 add_custom_command(TARGET editor POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy

@@ -109,6 +109,11 @@ void Renderer::setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     checkSdl(SDL_SetRenderDrawColor(ptr(), r, g, b, a));
 }
 
+void Renderer::setDrawColor(const SDL_Color& color)
+{
+    setDrawColor(color.r, color.g, color.b, color.a);
+}
+
 void Renderer::clear()
 {
     checkSdl(SDL_RenderClear(ptr()));
@@ -136,6 +141,16 @@ void Renderer::renderRect(const SDL_FRect& rect)
     checkSdl(SDL_RenderRect(ptr(), &rect));
 }
 
+Texture Renderer::createTextureFromSurface(Surface& surface)
+{
+    return Texture{checkSdl(SDL_CreateTextureFromSurface(ptr(), surface.ptr()))};
+}
+
+Texture Renderer::createTextureFromSurface(Surface&& surface)
+{
+    return Texture{checkSdl(SDL_CreateTextureFromSurface(ptr(), surface.ptr()))};
+}
+
 Surface::Surface(SDL_Surface* ptr)
 {
     _ptr.reset(ptr);
@@ -151,9 +166,9 @@ const SDL_Surface* Surface::ptr() const
     return _ptr.get();
 }
 
-Font::Font(const char* file, int ptsize)
+Texture::Texture(SDL_Texture* ptr)
 {
-    _ptr.reset(checkTtf(TTF_OpenFont(file, ptsize)));
+    _ptr.reset(ptr);
 }
 
 void hideCursor()
@@ -164,6 +179,36 @@ void hideCursor()
 void showCursor()
 {
     checkSdl(SDL_ShowCursor());
+}
+
+Font::Font(const char* file, int ptsize)
+{
+    open(file, ptsize);
+}
+
+void Font::open(const char* file, int ptsize)
+{
+    _ptr.reset(checkTtf(TTF_OpenFont(file, ptsize)));
+}
+
+void Font::close()
+{
+    _ptr.reset();
+}
+
+TTF_Font* Font::ptr()
+{
+    return _ptr.get();
+}
+
+const TTF_Font* Font::ptr() const
+{
+    return _ptr.get();
+}
+
+Surface renderUtf8Blended(Font& font, const char* text, const SDL_Color& fg)
+{
+    return Surface{checkTtf(TTF_RenderUTF8_Blended(font.ptr(), text, fg))};
 }
 
 } // namespace sdl

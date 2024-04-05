@@ -2,11 +2,7 @@
 
 #include "timer.hpp"
 
-#include <cstdlib>
-#include <exception>
-#include <iostream>
-
-int main() try
+int main()
 {
     static constexpr int fps = 240;
 
@@ -25,11 +21,4 @@ int main() try
 
         timer.relax();
     }
-} catch (const std::exception& e) {
-    try {
-        std::cerr << e.what() << "\n";
-    } catch (...) {
-        return EXIT_FAILURE;
-    }
-    return EXIT_FAILURE;
 }

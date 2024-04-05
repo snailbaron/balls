@@ -86,11 +86,14 @@ private:
 class EditorWindow {
 public:
     EditorWindow()
-        : _window("balls editor", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED)
+        : _window("balls editor", 1024, 768, SDL_WINDOW_RESIZABLE)
         , _renderer(_window, nullptr, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
     {
         auto [w, h] = _renderer.size();
         _camera.focus(w, h, Point{50, 50}, 120);
+
+        _ui.add<Button>(_renderer, _font, Point{100, 50}, "button1", []{ std::cerr << "action1\n"; });
+        _ui.add<Button>(_renderer, _font, Point{100, 120}, "button2", [] { std::cerr << "action2\n"; });
     }
 
     bool processInput()
@@ -98,6 +101,10 @@ public:
         for (SDL_Event event; SDL_PollEvent(&event); ) {
             if (event.type == SDL_EVENT_QUIT) {
                 return false;
+            }
+
+            if (_ui.processEvent(event)) {
+                continue;
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN &&
@@ -147,6 +154,8 @@ public:
             _renderer.fillRect(toSdl(_camera.project(brick)));
         }
 
+        _ui.render(_renderer);
+
         _renderer.present();
     }
 
@@ -164,9 +173,12 @@ private:
     sdl::Window _window;
     sdl::Renderer _renderer;
 
+    sdl::Font _font;
+
     AxisAlignedRect _fieldRect {Point{50.f, 50.f}, 100.f, 100.f};
     Camera _camera;
     std::vector<AxisAlignedRect> _bricks;
+    UI _ui;
 
     bool _draggingField = false;
 };
