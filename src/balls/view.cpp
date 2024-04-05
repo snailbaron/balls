@@ -6,18 +6,18 @@
 View::View(World& world)
     : _world(world)
 {
-    _window.reset(checkSdl(SDL_CreateWindow(
+    _window.create(
         config.windowTitle.c_str(),
         config.windowWidth,
         config.windowHeight,
-        0)));
+        0);
 
-    _renderer.reset(checkSdl(SDL_CreateRenderer(
-        _window.get(),
+    _renderer.create(
+        _window,
         nullptr,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)));
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    checkSdl(SDL_HideCursor());
+    sdl::hideCursor();
 }
 
 bool View::processInput() const

@@ -17,7 +17,6 @@ public:
 private:
     World& _world;
 
-    std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> _window{
-        nullptr, SDL_DestroyWindow};
+    sdl::Window _window;
     sdl::Renderer _renderer;
 };

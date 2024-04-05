@@ -1,29 +1,15 @@
 #include "config.hpp"
 #include "error.hpp"
+#include "sdl.hpp"
 #include "timer.hpp"
 #include "view.hpp"
 #include "world.hpp"
 
-#include <SDL.h>
-
 #include <memory>
-
-class SdlInit {
-public:
-    SdlInit(Uint32 flags)
-    {
-        checkSdl(SDL_Init(flags));
-    }
-
-    ~SdlInit()
-    {
-        SDL_Quit();
-    }
-};
 
 int main()
 {
-    auto sdlInit = SdlInit{SDL_INIT_VIDEO | SDL_INIT_AUDIO};
+    auto sdlInit = sdl::Init{SDL_INIT_VIDEO | SDL_INIT_AUDIO};
 
     auto world = World{};
     auto view = View{world};

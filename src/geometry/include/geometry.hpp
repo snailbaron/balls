@@ -284,6 +284,11 @@ struct AxisAlignedRect {
             std::abs(point.y - center.y) <= height / 2;
     }
 
+    Point topLeft() const
+    {
+        return Point(minX(), maxY());
+    }
+
     float minX() const { return center.x - width / 2; }
     float maxX() const { return center.x + width / 2; }
     float minY() const { return center.y - height / 2; }

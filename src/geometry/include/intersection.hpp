@@ -19,3 +19,5 @@ std::optional<Point> intersectionPoint(const Line& lhs, const Line& rhs);
 std::optional<Point> intersectionPoint(const Line& line, const Segment& segment);
 std::optional<Point> intersectionPoint(const Ray& ray, const Line& line);
 std::optional<Point> intersectionPoint(const Ray& ray, const Segment& segment);
+
+std::optional<Segment> intersectionSegment(const Line& line, const AxisAlignedRect& rect);

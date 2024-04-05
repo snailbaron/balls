@@ -1,6 +1,7 @@
 #include "intersection.hpp"
 
 #include <algorithm>
+#include <vector>
 
 bool intersect(const Point& point, const Circle& circle)
 {
@@ -114,4 +115,25 @@ std::optional<Point> intersectionPoint(const Ray& ray, const Segment& segment)
         return *p;
     }
     return std::nullopt;
+}
+
+std::optional<Segment> intersectionSegment(const Line& line, const AxisAlignedRect& rect)
+{
+    auto points = std::vector<Point>{};
+    for (const auto& segment : rect.segments()) {
+        if (auto p = intersectionPoint(line, segment)) {
+            points.push_back(*p);
+        }
+    }
+
+    if (points.size() < 2) {
+        return std::nullopt;
+    }
+
+    std::ranges::sort(
+        points, {},
+        [&line] (const Point& point) {
+            return line.coordinate(point);
+        });
+    return Segment{points.front(), points.back()};
 }

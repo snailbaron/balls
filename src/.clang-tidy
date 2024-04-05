@@ -1,0 +1,23 @@
+WarningsAsErrors: true
+ExtraArgs:
+    - -Wno-unknown-pragmas
+Checks: >
+    bugprone-*,
+    cert-*,
+    clang-analyzer-*,
+    concurrency-*,
+    cppcoreguidelines-*,
+    hicpp-*,
+    -hicpp-uppercase-literal-suffix,
+    -hicpp-use-nullptr,
+    llvm-*,
+    misc-*,
+    modernize-*,
+    -modernize-use-nullptr,
+    -modernize-use-trailing-return-type,
+    performance-*,
+    portability-*,
+    readability-*,
+    -readability-uppercase-literal-suffix,
+
+# modernize-use-nullptr (aka #hicpp-use-nullptr) Crashes VS2022

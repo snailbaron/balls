@@ -1,12 +1,14 @@
 #pragma once
 
 #include <exception>
+#include <iostream>
 #include <source_location>
 #include <sstream>
-#include <stacktrace>
 #include <string>
 
-#include <SDL.h>
+#ifdef __cpp_lib_stacktrace
+    #include <stacktrace>
+#endif
 
 template <class T>
 concept Streamable = requires (std::ostream& output, const T& x)
@@ -20,7 +22,9 @@ public:
     {
         auto stream = std::ostringstream{};
         stream <<
+#ifdef __cpp_lib_stacktrace
             std::stacktrace::current() << "\n" <<
+#endif
             sl.file_name() << " (" << sl.function_name() << "): " <<
             sl.line() << ":" << sl.column() << ": ";
         _message = std::move(stream).str();
@@ -57,19 +61,15 @@ private:
     std::string _message;
 };
 
-template <class T>
-T* checkSdl(T* ptr, std::source_location sl = std::source_location::current())
+inline void handleError() noexcept
 {
-    if (ptr == nullptr) {
-        throw Error{sl} << SDL_GetError();
-    }
-    return ptr;
-}
-
-inline void checkSdl(
-    int returnCode, std::source_location sl = std::source_location::current())
-{
-    if (returnCode != 0) {
-        throw Error{sl} << SDL_GetError();
-    }
+    try {
+        try {
+            std::rethrow_exception(std::current_exception());
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << "\n";
+        } catch (...) {
+            std::cerr << "unknown error\n";
+        }
+    } catch (...) { }
 }
